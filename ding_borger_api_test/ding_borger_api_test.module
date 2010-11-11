@@ -1,0 +1,77 @@
+<?php
+
+// $Id$
+
+/**
+ * Implementation of hook_menu.
+ */
+function ding_borger_api_test_menu() {
+  $items = array();
+
+  $items['admin/settings/ding_borger_api_test'] = array(
+      'title' => 'Test Borger.dk integration',
+      'description' => 'View data for your loans and reservations on borger.dk',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('ding_borger_api_test_form'),
+      'access arguments' => array('administer configuration'),
+  );
+
+  return $items;
+}
+
+function ding_borger_api_test_form(&$form_state) {
+	$form = array();	
+  $form['UserProfileMapping_Cprnummer'] = array(
+    '#type' => 'textfield',
+    '#title' => t('CPR'),
+    '#default_value' => '0302650039',
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Load data'),
+  );
+
+  //FIXME: There must be a better way of transfering values from submit
+  //to form than using session.
+  if (isset($_SESSION['ding_borger_api_test_result'])) {
+	  $form['data'] = array(
+		  '#type' => 'fieldset',
+		  '#title' => t('Data'),
+		);
+    $form['data']['markup'] = array(
+      '#type' => 'markup',
+      '#value' => $_SESSION['ding_borger_api_test_result'],
+    );
+		unset($_SESSION['ding_borger_api_test_result']);
+  }
+	
+  return $form;
+}
+
+function ding_borger_api_test_form_submit($form, &$form_state) {
+	$data = $_POST;
+  if ($data['UserProfileMapping_Cprnummer']) {
+    foreach (array('form_build_id', 'form_token', 'form_id', 'submit', 'data_value') as $key) {
+      unset ($data[$key]);    
+    }
+    
+    $http_data = array();
+    foreach ($data as $key => $value) {
+    	if (is_array($value)) {
+    		foreach($value as $k => $v) {
+    			$http_data[] = $key.'['.$k.']='.$v;
+    		}
+    	} else {
+        $http_data[] = $key.'='.$value;
+    	}
+    }
+    $http_data = implode('&', $http_data);
+    
+    $response = drupal_http_request(url('ding_borger_api/service', array(absolute => TRUE)), array('Content-Type' => 'application/x-www-form-urlencoded'), 'POST', $http_data);
+    if ($response->status_message == 'OK') {
+      $_SESSION['ding_borger_api_test_result'] = $response->data;
+    } else {
+    	$_SESSION['ding_borger_api_test_result'] = $response->status_message;
+    }
+  }
+}

@@ -1,0 +1,7 @@
+; $Id$
+name = Ding! Borger.dk API
+description = API for integrating the Ding.ting services with www.borger.dk
+php = 5.2
+core = 6.x
+dependencies[] = ding_library_user
+package = Ding!

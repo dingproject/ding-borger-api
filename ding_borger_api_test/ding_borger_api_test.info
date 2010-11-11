@@ -1,0 +1,7 @@
+; $Id$
+name = Ding! Borger.dk API test
+description = Module for testing the Ding Borger.dk API module 
+php = 5.2
+core = 6.x
+dependencies[] = ding_borger_api
+package = Ding!
