@@ -128,26 +128,34 @@ function ding_borger_api_requirements($phase) {
 }
 
 function ding_borger_api_preprocess_ding_borger_api_response($vars) {
+	$account = $vars['account'];
+	
   //Generate debts notice
   //FIXME: There must be a more clean way of doing this!
   ctools_include('debt_list', 'ding_debt', 'plugins/content_types');
   module_load_include('forms.inc', 'ding_library_user');
   $context = new stdClass();
-  $context->data = $vars['account'];
+  $context->data = $account;
   $debt_block = ding_debt_debt_list_content_type_render('ding_debt_notice', NULL, NULL, $context);
   $vars['debt_notice'] = $debt_block->content;
 
   // Generate loans form HTML
-  $loans = ding_provider_invoke('loan', 'get loans', $vars['account']);
+  $loans = ding_provider_invoke('loan', 'get loans', $account);
   $loan_html = drupal_get_form('ding_library_user_loan_list_form', $account, $loans);
   $vars['loans'] = _ding_borger_api_process_form_markup($loan_html);
 
   // Generate reservations form HTML
-  $reservations = ding_provider_invoke('reservation', 'list', $vars['account']);
+  $reservations = ding_provider_invoke('reservation', 'list', $account);
   $res_html=drupal_get_form('ding_reservation_list_form', $account, $reservations);
   $vars['reservations'] = _ding_borger_api_process_form_markup($res_html);
 }
 
+/**
+ * Remove all markup which should not be displayed in the response to borger.dk.
+ * 
+ * @param string $html the original markup
+ * @return string cleaned up markup
+ */
 function _ding_borger_api_process_form_markup($html) {
   $remove_patterns = array('/<form[^>]*>/',
                            '/<\/form[^>]*>/',
