@@ -102,15 +102,6 @@ function ding_borger_api_theme($existing, $type, $theme, $path) {
       'arguments' => array('account' => NULL),
       'template' => 'ding_borger_api_response',
     ),
-  
-    'ding_borger_api_reservation_list_form' => array(
-      'arguments' => array('form' => NULL),
-      'file' => 'ding_borger_api.theme.inc',
-    ),
-    'ding_borger_api_loan_list_form' => array(
-      'arguments' => array('form' => NULL),
-      'file' => 'ding_borger_api.theme.inc',
-    ),
   );
 }
 
@@ -136,117 +127,6 @@ function ding_borger_api_requirements($phase) {
 	return array($requirement);
 }
 
-/**
- * 
- */
-function ding_borger_api_reservation_list_form($form_state, $records) {
-  // TODO: Move this variable.
-  $cancel_fetchable = (boolean) variable_get('ding_library_user_cancel_fetchable_reservable', TRUE);
-  $form = array();
-
-  $form['reservations'] = array(
-    '#type' => 'value',
-    '#grouped' => array(),
-    '#value' => array(),
-  );
-
-  $form['reserved'] = array(
-    '#tree' => TRUE,
-  );
-
-  foreach ($records as $reservation) {
-    $form['reservations']['#value'][$reservation['id']] = $reservation;
-    $form['reservations']['#grouped'][$reservation['status']][$reservation['id']] = $reservation;
-
-    $form['reserved'][$reservation['id']] = array(
-      '#type' => 'checkbox',
-      '#return_value' => $reservation['id'],
-      '#disabled' => TRUE,
-    );
-    if ($reservation['status'] == 'active' || ($cancel_fetchable && $reservation['status'] == 'fetchable')) {
-      $form['reserved'][$reservation['id']]['#disabled'] = FALSE;
-    }
-  }
-
-  return $form;
-}
-
-function ding_borger_api_form_ding_borger_api_reservation_list_form_alter(&$form, $form_state) {
-	//Perform same form alters on this form as on ding_reservation_list_form
-	//to support actions added by Ding providers
-  $data = &$form;
-  $data['__drupal_alter_by_ref'] = array(&$form_state);
-  drupal_alter('form_'. 'ding_reservation_list_form', $data);
-
-  // __drupal_alter_by_ref is unset in the drupal_alter() function, we need
-  // to repopulate it to ensure both calls get the data.
-  $data['__drupal_alter_by_ref'] = array(&$form_state);
-  drupal_alter('form', $data, 'ding_reservation_list_form');
-}
-
-/**
- * Loan details form.
- *
- * @todo Way too much logic in the theme function. Move some of it here.
- */
-function ding_borger_api_loan_list_form($form_state, $records) {
-  $grouped = _ding_library_user_group_loans($records);
-  $renew_buttons = FALSE;
-  $form = array();
-
-  $form['loan_data'] = array(
-    '#type' => 'value',
-    '#grouped' => $grouped,
-    '#value' => $records,
-  );
-
-  $form['loans'] = array(
-    '#tree' => TRUE,
-  );
-
-  $all_renewable_loans=array();
-  foreach($records as $record) {
-    if($record['is_renewable']) {
-      $all_renewable_loans[]=$record['id'];
-    }
-  }
-
-  $form['all_renewable_loans'] = array(
-      '#type' => 'hidden',
-      '#value' => join(',',$all_renewable_loans),
-
-  );
-
-  foreach ($records as $loan) {
-    $form['loans'][$loan['id']] = array(
-      '#type' => 'checkbox',
-      '#return_value' => $loan['id'],
-      '#disabled' => TRUE,
-    );
-    if ($loan['is_renewable']) {
-      $form['loans'][$loan['id']]['#disabled'] = FALSE;
-      $renew_buttons = TRUE;
-    }
-  }
-
-  if ($renew_buttons) {
-    $form['renew'] = array(
-      '#type' => 'submit',
-      '#value' => t('Renew selected'),
-      #'#name'=> 'renew',
-    );
-
-    $form['renew_all'] = array(
-      '#type' => 'submit',
-      '#value' => t('Renew all'),
-      '#attributes' => array('class' => 'renew-all-button'),
-      #'#name' => 'renew_all',
-    );
-  }
-
-  return $form;
-}
-
 function ding_borger_api_preprocess_ding_borger_api_response($vars) {
   //Generate debts notice
   //FIXME: There must be a more clean way of doing this!
@@ -259,12 +139,12 @@ function ding_borger_api_preprocess_ding_borger_api_response($vars) {
 
   // Generate loans form HTML
   $loans = ding_provider_invoke('loan', 'get loans', $vars['account']);
-  $loan_html = drupal_get_form('ding_borger_api_loan_list_form', $loans);
+  $loan_html = drupal_get_form('ding_library_user_loan_list_form', $account, $loans);
   $vars['loans'] = _ding_borger_api_process_form_markup($loan_html);
 
   // Generate reservations form HTML
   $reservations = ding_provider_invoke('reservation', 'list', $vars['account']);
-  $res_html=drupal_get_form('ding_borger_api_reservation_list_form', $reservations);
+  $res_html=drupal_get_form('ding_reservation_list_form', $account, $reservations);
   $vars['reservations'] = _ding_borger_api_process_form_markup($res_html);
 }
 
