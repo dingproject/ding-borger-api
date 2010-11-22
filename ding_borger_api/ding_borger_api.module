@@ -111,7 +111,7 @@ function ding_borger_api_theme($existing, $type, $theme, $path) {
       'arguments' => array('form' => NULL),
       'file' => 'ding_borger_api.theme.inc',
     ),
-      );
+  );
 }
 
 /**
