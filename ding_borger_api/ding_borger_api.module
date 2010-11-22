@@ -73,30 +73,35 @@ function ding_borger_api_service() {
 
 function _ding_borger_api_save_loans($data) {
   global $user;
-  module_load_include('forms.inc', 'ding_library_user');
-  $form_state=array();
-  $form_state['values']['loans'] = $data['loans'];
-  $form_state['values']['op'] = $data['op'];
 
-  $list = ding_provider_invoke('loan', 'get loans', $user);
+  //Remember to include the loan form definition
+  module_load_include('forms.inc', 'ding_library_user');
+  
+  //Transfer submitted values to Drupal form state array
+  $form_state = array();
+  $form_state['values'] = $data;
+  
+  //Execute the original loan list form programmatically
+  $loans = ding_provider_invoke('loan', 'get loans', $user);
   if ($list != DING_PROVIDER_AUTH_REQUIRED) {
-    drupal_execute('ding_library_user_loan_list_form', $form_state, $user, $list);
+    drupal_execute('ding_library_user_loan_list_form', $form_state, $user, $loans);
   }
 }
 
 function _ding_borger_api_save_reservations($data) {
   global $user;
+
+  //Remember to include the reservation form definition
+  module_load_include('module', 'ding_reservation');
   
+  //Transfer submitted values to Drupal form state array
   $form_state = array();
-  $form_state['values']['selected'] = $data['reserved'];
-  $form_state['values']['op'] = $data['op'];
-
-  $form_state['values']['new_expiry'] = $data['new_expiry'];
-  $form_state['values']['new_pickup_branch'] = $data['new_pickup_branch'];
-
-  $list = ding_provider_invoke('reservation', 'list', $user);
+  $form_state['values'] = $data;
+  
+  //Execute the original reservation list form programmatically
+  $reservations = ding_provider_invoke('reservation', 'list', $user);
   if ($list != DING_PROVIDER_AUTH_REQUIRED) {
-    drupal_execute('ding_reservation_list_form', $form_state, $user, $list);
+    drupal_execute('ding_reservation_list_form', $form_state, $user, $reservations);
   }
 }
 
