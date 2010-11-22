@@ -25,7 +25,11 @@ function ding_borger_api_menu() {
  */
 function ding_borger_api_service() {
   global $user;
+  global $base_path;
   
+  //Force absolute urls as links will be rendered on a separate site site and needs to link back to us
+  $base_path = url('', array('absolute' => TRUE));
+
   //Authenticate the user based on CPR number provided by the caller and a central password
   if (isset($_POST['UserProfileMapping_Cprnummer']) && is_numeric($_POST['UserProfileMapping_Cprnummer']))  {
     $cpr=$_POST['UserProfileMapping_Cprnummer'];
