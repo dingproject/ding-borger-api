@@ -1,0 +1,39 @@
+<?php
+// $Id$
+
+/**
+ * @file ding_borger_api.install
+ * Installation and upgrade hooks for the ding_borger_api module.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function ding_borger_api_install() {
+  drupal_install_schema('ding_borger_api');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function ding_borger_api_uninstall() {
+  drupal_uninstall_schema('ding_borger_api');
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function ding_borger_api_schema() {
+  $schema = array();
+  $schema['cache_ding_borger_api_response'] = drupal_get_schema_unprocessed('system', 'cache');
+  return $schema;
+}
+
+/**
+ * Install response cache schema.
+ */
+function ding_borger_api_update_6000() {
+  // Since we did not previously have a schema, install it.
+  return drupal_install_schema('ding_borger_api');
+}
+

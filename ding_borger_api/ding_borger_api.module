@@ -26,35 +26,48 @@ function ding_borger_api_menu() {
 function ding_borger_api_service() {
   global $user;
   global $base_path;
-  
-  //Force absolute urls as links will be rendered on a separate site site and needs to link back to us
+
+  // Force absolute urls as links will be rendered on a separate site site and needs to link back to us
   $base_path = url('', array('absolute' => TRUE));
 
-  //Authenticate the user based on CPR number provided by the caller and a central password
-  if (isset($_POST['UserProfileMapping_Cprnummer']) && is_numeric($_POST['UserProfileMapping_Cprnummer']))  {
-    $cpr=$_POST['UserProfileMapping_Cprnummer'];
+  $cpr = (isset($_POST['UserProfileMapping_Cprnummer']) && is_numeric($_POST['UserProfileMapping_Cprnummer'])) ? $_POST['UserProfileMapping_Cprnummer'] : FALSE;
+  $action = isset($_POST['op']) ? $_POST['op'] : FALSE;
+  
+  // Return cached response if no form action is called or test module is used
+  if ((!$action || $action = t('Load data')) && 
+      $cache = cache_get(md5($cpr), 'cache_ding_borger_api_response')) {
+    print $cache->data;
+  	return;
   }
+  
+  // Authenticate the user based on CPR number provided by the caller and a central password
   $password = variable_get('ding_borger_api_library_user_password', '');
   $res = ding_library_user_authenticate_user($cpr, $password);
   
   if ($res) {
-    if (isset($_POST['op'])) {
-      switch($_POST['op']) {
-        case t('Renew all'):
-        case t('Renew selected'):
-        	_ding_borger_api_save_loans($_POST);
-          break;
-        //FIXME: Do not hardcode button values. Use values from form alter instead
-        case t('Save changes for selected reservations'):
-        case t('Delete selected reservations'):
-          _ding_borger_api_save_reservations($_POST);
-          break;
-      }
-    }
+  	switch($action) {
+  		//FIXME: Hardcoding button values does not support changes later on. Can we use values from form alter instead?
+  		case t('Renew all'):
+  		case t('Renew selected'):
+  			_ding_borger_api_save_loans($_POST);
+  			break;
+  		case t('Save changes for selected reservations'):
+  		case t('Delete selected reservations'):
+  			_ding_borger_api_save_reservations($_POST);
+  			break;
+  	}
 
-    // Print final output
-    print theme('ding_borger_api_response', $user);
+    // Render final output
+    $response = theme('ding_borger_api_response', $user);
+    // Cache output for 5 minutes
+    // TODO: Move configuration of cache duration to administration
+    cache_set(md5($cpr), $response, 'cache_ding_borger_api_response', 60 * 60 * 5);
+    
+    print $response;
   } else {
+  	//Unable to authenticate the user. As we use a central password and assume this is valid
+  	//the most likely reason is that the CPR number is not registered in the system so
+  	//return with a 404. 
     drupal_not_found();
   }
 }
