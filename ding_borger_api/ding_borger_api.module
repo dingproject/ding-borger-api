@@ -52,22 +52,10 @@ function ding_borger_api_service() {
       }
     }
 
-    module_load_include('forms.inc', 'ding_library_user');
-
-    // Generate loans form html
-    $loans = ding_provider_invoke('loan', 'get loans', $user);
-    $loan_html = drupal_get_form('ding_borger_api_loan_list_form', $loans);
-    $loan_html = _ding_borger_api_process_form_markup($loan_html);
-    
-    // Generate reservations form html
-    $reservations = ding_provider_invoke('reservation', 'list', $user);
-    $res_html=drupal_get_form('ding_borger_api_reservation_list_form', $reservations);
-    $res_html = _ding_borger_api_process_form_markup($res_html);
-
-    print $loan_html;
-    print $res_html;
+    // Print final output
+    print theme('ding_borger_api_response', $user);
   } else {
-    drupal_set_message('No Access', 'error');
+    drupal_not_found();
   }
 }
 
@@ -110,6 +98,11 @@ function _ding_borger_api_save_reservations($data) {
  */
 function ding_borger_api_theme($existing, $type, $theme, $path) {
   return array(
+    'ding_borger_api_response' => array(
+      'arguments' => array('account' => NULL),
+      'template' => 'ding_borger_api_response',
+    ),
+  
     'ding_borger_api_reservation_list_form' => array(
       'arguments' => array('form' => NULL),
       'file' => 'ding_borger_api.theme.inc',
@@ -252,6 +245,27 @@ function ding_borger_api_loan_list_form($form_state, $records) {
   }
 
   return $form;
+}
+
+function ding_borger_api_preprocess_ding_borger_api_response($vars) {
+  //Generate debts notice
+  //FIXME: There must be a more clean way of doing this!
+  ctools_include('debt_list', 'ding_debt', 'plugins/content_types');
+  module_load_include('forms.inc', 'ding_library_user');
+  $context = new stdClass();
+  $context->data = $vars['account'];
+  $debt_block = ding_debt_debt_list_content_type_render('ding_debt_notice', NULL, NULL, $context);
+  $vars['debt_notice'] = $debt_block->content;
+
+  // Generate loans form HTML
+  $loans = ding_provider_invoke('loan', 'get loans', $vars['account']);
+  $loan_html = drupal_get_form('ding_borger_api_loan_list_form', $loans);
+  $vars['loans'] = _ding_borger_api_process_form_markup($loan_html);
+
+  // Generate reservations form HTML
+  $reservations = ding_provider_invoke('reservation', 'list', $vars['account']);
+  $res_html=drupal_get_form('ding_borger_api_reservation_list_form', $reservations);
+  $vars['reservations'] = _ding_borger_api_process_form_markup($res_html);
 }
 
 function _ding_borger_api_process_form_markup($html) {
