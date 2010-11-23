@@ -9,12 +9,26 @@ function ding_borger_api_menu() {
   $items = array();
 
   $items['ding_borger_api/service'] = array(
-      'title' => 'View data',
-      'description' => 'View data for your loans and reservations on borger.dk',
-      'page callback' => 'ding_borger_api_service',
-      'page arguments' => array(''),
-      'access arguments' => array('access content'), //måske lave IP block her?
-      'type' => MENU_CALLBACK,
+    'title' => 'View data',
+    'description' => 'Render user loans and reservations as a portal add-in on borger.dk',
+    'page callback' => 'ding_borger_api_service',
+    'access callback' => 'ding_borger_api_service_access',
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/settings/ding_borger_api'] = array(
+    'title' => 'Ding! Borger.dk API',
+    'description' => 'Administer the Borger.dk API',
+    'access arguments' => array('administer site configuration'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ding_borger_api_admin_settings_form'),
+    'file' => 'ding_borger_api.admin.inc',
+    'access arguments' => array('administer site configuration'),
+  );
+  $items['admin/settings/ding_borger_api/settings'] = array(
+    'title' => 'Settings',
+    'description' => 'Administer settings for the Borger.dk API',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+	  'weight' => -10,
   );
 
   return $items;
@@ -76,6 +90,17 @@ function ding_borger_api_service() {
   	//return with a 404. 
     drupal_not_found();
   }
+}
+
+/**
+ * Access callback for the service. Restricts access by IP.
+ */
+function ding_borger_api_service_access() {
+  $allowed_ips = variable_get('ding_borger_api_allowed_ips', FALSE);
+  $allowed_ips = explode("\r\n", $allowed_ips);
+  //If access restriction has been configured the IP address must be in the list.
+  //Otherwise let everbody through.
+  return (sizeof($allowed_ips) > 0) ? in_array(ip_address(), $allowed_ips) : true;
 }
 
 function _ding_borger_api_save_loans($data) {

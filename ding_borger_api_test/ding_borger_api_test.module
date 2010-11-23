@@ -8,12 +8,13 @@
 function ding_borger_api_test_menu() {
   $items = array();
 
-  $items['admin/settings/ding_borger_api_test'] = array(
-      'title' => 'Ding! Borger.dk API test',
-      'description' => 'Test the Ding! Borger.dk API test',
+  $items['admin/settings/ding_borger_api/test'] = array(
+      'title' => 'Test',
+      'description' => 'Test the Ding! Borger.dk API service',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('ding_borger_api_test_form'),
       'access arguments' => array('administer site configuration'),
+      'type' => MENU_LOCAL_TASK,
   );
 
   return $items;
