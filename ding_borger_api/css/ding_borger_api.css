@@ -44,6 +44,7 @@
 .ding-borger-api-data .messages a:hover,
 .ding-borger-api-data .ding-debts a:hover { color: #99ba34; }
 
+.ding-borger-api-data td.title img { display: none; }
 .ding-borger-api-data td.image img { border: 1px solid #d6e2c2; }
 
 .ding-borger-api-data .ding-loans,
