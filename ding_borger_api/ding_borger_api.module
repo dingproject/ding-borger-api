@@ -140,6 +140,13 @@ function ding_borger_api_requirements($phase) {
 	return array($requirement);
 }
 
+/**
+ * Implementation of hook_flush_caches().
+ */
+function ding_borger_api_flush_caches() {
+  return array('cache_ding_borger_api_response');
+}
+
 function ding_borger_api_preprocess_ding_borger_api_response($vars) {
 	$account = $vars['account'];
 	
