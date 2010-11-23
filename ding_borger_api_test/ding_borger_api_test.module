@@ -65,14 +65,20 @@ function ding_borger_api_test_form_submit($form, &$form_state) {
       unset ($data[$key]);    
     }
     
+    $service_url = url('ding_borger_api/service', array(absolute => TRUE));
+    
     //Build the HTTP POST data
     $http_data = _ding_borger_api_test_create_http_data($data);
     $http_data = implode('&', $http_data);
     
-    //Send the request to the Borger.dk moduling mimicking a request from the Borger.dk portal
-    $response = drupal_http_request(url('ding_borger_api/service', array(absolute => TRUE)), array('Content-Type' => 'application/x-www-form-urlencoded'), 'POST', $http_data);
+    watchdog('ding_borger_api_test', t('Request: @url (data: @data)'), array('@url' => $service_url, '@data' => $http_data), WATCHDOG_DEBUG);
     
-    //Store the response
+    //Send the request to the Borger.dk moduling mimicking a request from the Borger.dk portal
+    $response = drupal_http_request($service_url, array('Content-Type' => 'application/x-www-form-urlencoded'), 'POST', $http_data);
+    
+    watchdog('ding_borger_api_test', t('Reponse: @response'), array('@response' => var_export($response, true)), WATCHDOG_DEBUG);
+    
+    //Store the response in the session
     if ($response->status_message == 'OK') {
       $_SESSION['ding_borger_api_test_result'] = $response->data;
     } else {
