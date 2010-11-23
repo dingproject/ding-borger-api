@@ -79,10 +79,10 @@ function ding_borger_api_test_form_submit($form, &$form_state) {
     watchdog('ding_borger_api_test', t('Reponse: @response'), array('@response' => var_export($response, true)), WATCHDOG_DEBUG);
     
     //Store the response in the session
-    if ($response->status_message == 'OK') {
+    if ($response->code == 200) {
       $_SESSION['ding_borger_api_test_result'] = $response->data;
     } else {
-    	$_SESSION['ding_borger_api_test_result'] = $response->status_message;
+    	$_SESSION['ding_borger_api_test_result'] = $response->code.': '.$response->status_message;
     }
   }
 }
