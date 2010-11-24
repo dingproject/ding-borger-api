@@ -1,10 +1,15 @@
-.ding-borger-api-data * { text-shadow: none; -moz-box-shadow: none; }
+/**
+ * Ding Borger.dk styles 
+ * This includes styles required to make the response appear as specified by the 2010 HTML guideline
+ * and remove any styles from Drupal themes which will be applied if tested locally.
+ */
+
+/* Basic styles */
+.ding-borger-api-data * { text-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none; }
 .ding-borger-api-data { padding: 15px; color: #333; font-family: Verdana, Arial, sans-serif; font-size: 11px; line-height: 15px; }
 .ding-borger-api-data a { color: #618f11;  text-decoration: underline; }
 .ding-borger-api-data a:hover { color: #ce4e2f; }
 .ding-borger-api-data label { font-size: 11px; line-height: 15px; color: 333; font-weight: bold; text-transform: none; color: #454c59; }
-.ding-borger-api-data .item-list, 
-.ding-borger-api-data .form-item { padding: 0; }
 
 /* Tables */
 .ding-borger-api-data table { margin: 15px 0; border: 0 none; }
@@ -16,6 +21,7 @@
 .ding-borger-api-data table .odd { background-color: #eef3e7; }
 
 /* Forms */
+.ding-borger-api-data .form-item { padding: 0; }
 .ding-borger-api-data .form-autocomplete, 
 .ding-borger-api-data .form-text, 
 .ding-borger-api-data .form-textarea, 
@@ -32,7 +38,7 @@
 .ding-borger-api-data .form-button span,
 .ding-borger-api-data .form-button input { display: block; height: 25px; }
 .ding-borger-api-data .form-button span { padding-left: 15px; background: url(../images/button-sprites-left.png) bottom left no-repeat; }
-.ding-borger-api-data .form-button input { padding: 2px 15px 2px 0; background: url(../images/button-sprites-right.png) bottom right no-repeat; color: #fff; text-transform: uppercase; border: 0 none; font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; -moz-box-shadow: none; -moz-border-radius: 0;}
+.ding-borger-api-data .form-button input { padding: 2px 15px 2px 0; background: url(../images/button-sprites-right.png) bottom right no-repeat; color: #fff; text-transform: uppercase; border: 0 none; font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; -moz-box-shadow: none; -moz-border-radius: 0; -webkit-box-shadow: none; -webkit-border-radius: 0;}
 .ding-borger-api-data .form-button:hover span { background-position: top left; }
 .ding-borger-api-data .form-button:hover input { background-position: top right; }
 
@@ -44,18 +50,16 @@
 .ding-borger-api-data .messages a:hover,
 .ding-borger-api-data .ding-debts a:hover { color: #99ba34; }
 
-.ding-borger-api-data td.title img { display: none; }
-.ding-borger-api-data td.image img { border: 1px solid #d6e2c2; }
-
+/* Loans and reservations */
 .ding-borger-api-data .ding-loans,
 .ding-borger-api-data .ding-reservations {  margin: 15px 0; }
 
-/* Markupless clearing */
-.ding-borger-api-data .ding-loans,
-.ding-borger-api-data .ding-reservations {  zoom: 1 }
-.ding-borger-api-data .ding-loans:after,
-.ding-borger-api-data .ding-reservations:after {  content: "."; display: block; height: 0; clear: both; visibility: hidden; }
-
+.ding-borger-api-data td.title img { display: none; }
+.ding-borger-api-data td.image img { border: 1px solid #d6e2c2; }
+.ding-borger-api-data td.loan_date,
+.ding-borger-api-data td.due_date,
+.ding-borger-api-data td.create_date,
+.ding-borger-api-data td.valid_to { white-space: nowrap; }
 
 /* Buttons */
 .ding-borger-api-data .update-controls { margin-bottom: 15px; }
@@ -63,3 +67,9 @@
 .ding-borger-api-data .update-controls .form-item .form-item { float: none; margin-left: 0; }
 .ding-borger-api-data .update-controls .container-inline-date { margin-left: 0; }
 .ding-borger-api-data .container-inline-date #edit-options-expiry-datepicker-popup-1 { width: 195px; }
+
+/* Markupless clearing */
+.ding-borger-api-data .ding-loans,
+.ding-borger-api-data .ding-reservations {  zoom: 1 }
+.ding-borger-api-data .ding-loans:after,
+.ding-borger-api-data .ding-reservations:after {  content: "."; display: block; height: 0; clear: both; visibility: hidden; }
