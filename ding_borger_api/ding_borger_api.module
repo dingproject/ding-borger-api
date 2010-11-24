@@ -100,7 +100,7 @@ function ding_borger_api_service_access() {
   $allowed_ips = explode("\r\n", $allowed_ips);
   //If access restriction has been configured the IP address must be in the list.
   //Otherwise let everbody through.
-  return (sizeof($allowed_ips) > 0) ? in_array(ip_address(), $allowed_ips) : true;
+  return (sizeof(array_filter($allowed_ips)) > 0) ? in_array(ip_address(), $allowed_ips) : true;
 }
 
 function _ding_borger_api_save_loans($data) {
