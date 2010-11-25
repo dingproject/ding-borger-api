@@ -12,7 +12,7 @@
 .ding-borger-api-data label { font-size: 11px; line-height: 15px; color: 333; font-weight: bold; text-transform: none; color: #454c59; }
 
 /* Tables */
-.ding-borger-api-data table { margin: 15px 0; border: 0 none; }
+.ding-borger-api-data table { clear: both; margin: 15px 0; border: 0 none; }
 .ding-borger-api-data table caption { font-size: 15px; line-height: 18px; text-align: left; color: #454c59; font-weight: bold; }
 .ding-borger-api-data table thead th { background-color: #fff; }
 .ding-borger-api-data table td, 
@@ -61,7 +61,11 @@
 .ding-borger-api-data td.create_date,
 .ding-borger-api-data td.valid_to { white-space: nowrap; }
 
-/* Buttons */
+/* Loan buttons */
+.ding-borger-api-data .edit-renew-top,
+.ding-borger-api-data .edit-renew-all-top { margin-bottom: 15px; }
+
+/* Reservation buttons */
 .ding-borger-api-data .update-controls { margin-bottom: 15px; }
 .ding-borger-api-data .update-controls .form-item { float: left; margin-left: 10px; }
 .ding-borger-api-data .update-controls .form-item .form-item { float: none; margin-left: 0; }
