@@ -1,15 +1,21 @@
 /**
  * Ding Borger.dk styles 
+ * 
  * This includes styles required to make the response appear as specified by the 2010 HTML guideline
- * and remove any styles from Drupal themes which will be applied if tested locally.
+ * and attempts to remove any styles from Drupal themes which will be applied if tested locally.
+ *
+ * Styles defined here are injected into the Borger.dk API response as inline styles as Borger.dk
+ * does not import stylesheets. This means that pseudo-classes (hover, after) etc. does not work.
+ *
+ * @TODO separate admin theme reset from actual styles.
  */
 
 /* Basic styles */
-.ding-borger-api-data * { text-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none; }
+.ding-borger-api-data * { text-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none; text-transform: none; }
 .ding-borger-api-data { padding: 15px; color: #333; font-family: Verdana, Arial, sans-serif; font-size: 11px; line-height: 15px; }
 .ding-borger-api-data a { color: #618f11;  text-decoration: underline; }
 .ding-borger-api-data a:hover { color: #ce4e2f; }
-.ding-borger-api-data label { font-size: 11px; line-height: 15px; color: 333; font-weight: bold; text-transform: none; color: #454c59; }
+.ding-borger-api-data label { font-size: 11px; line-height: 15px; color: 333; font-weight: bold; color: #454c59; }
 
 /* Tables */
 .ding-borger-api-data table { clear: both; margin: 15px 0; border: 0 none; }
@@ -73,7 +79,9 @@
 .ding-borger-api-data .container-inline-date #edit-options-expiry-datepicker-popup-1 { width: 195px; }
 
 /* Markupless clearing */
+/* Clearing using :after not supported when injecting styles so do not include this for now.
 .ding-borger-api-data .ding-loans,
 .ding-borger-api-data .ding-reservations {  zoom: 1 }
 .ding-borger-api-data .ding-loans:after,
-.ding-borger-api-data .ding-reservations:after {  content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+.ding-borger-api-data .ding-reservations:after {  content: "."; display: block; height: 0; clear: both; visibility: hidden; } */
+.ding-borger-api-data .ding-reservations { margin-top: 53px; } /* Double top margin + height of floating bottom loan buttons */

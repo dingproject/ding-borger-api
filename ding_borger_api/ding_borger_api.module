@@ -76,7 +76,10 @@ function ding_borger_api_service() {
     	
     // Render final output
     $response = theme('ding_borger_api_response', $user);
-
+    
+    // Postprocess the response
+    $response = ding_borger_api_process_response($response);
+    
     if (sizeof($messages) == 0) {
       // No messages? Cache output for 5 minutes
       // TODO: Move configuration of cache duration to administration
@@ -153,8 +156,9 @@ function ding_borger_api_theme($existing, $type, $theme, $path) {
  * Implementation of hook_requirements().
  */
 function ding_borger_api_requirements($phase) {
-  $requirement = array('title' => t('Ding! Borger.dk API'));
-
+  $requirements = array();
+  
+  $requirement = array('title' => t('Ding! Borger.dk API Password'));
   if ($phase == 'runtime') {
     if (!variable_get('ding_borger_api_library_user_password', FALSE)) {
       $requirement['severity'] = REQUIREMENT_ERROR;
@@ -164,11 +168,28 @@ function ding_borger_api_requirements($phase) {
       no administration interface for doing this.');
     } else {
       $requirement['severity'] = REQUIREMENT_OK;
-      $requirement['value'] = t('Configuration OK');
+      $requirement['value'] = t('Password configured');
     }
   }
+  $requirements[] = $requirement;
 
-  return array($requirement);
+  $requirement = array('title' => t('Ding! Borger.dk API CSS Inliner'));
+  if ($phase == 'runtime') {
+    if (ding_borger_api_load_emogrifier() === FALSE) {
+      $requirement['severity'] = REQUIREMENT_ERROR;
+      $requirement['value'] = 'Emogrifier missing';
+      $requirement['description'] = t('Download emogrifier library from !link and extracted at %path.', 
+                                      array('!link' => l('http://www.pelagodesign.com/sidecar/emogrifier/'),
+                                            '%path' => drupal_get_path('module', 'ding_borger_api').'/lib/emogrifier/'));
+    } else {
+      $requirement['severity'] = REQUIREMENT_OK;
+      $requirement['value'] = t('!emogrifier available', array('!emogrifier' => l('Emogrifier', 'http://www.pelagodesign.com/sidecar/emogrifier/')));
+    }
+  }
+  $requirements[] = $requirement;
+  
+  
+  return $requirements; 
 }
 
 /**
@@ -192,25 +213,48 @@ function ding_borger_api_preprocess_ding_borger_api_response($vars) {
 
   // Generate loans form HTML
   $loans = ding_provider_invoke('loan', 'get loans', $account);
-  $loan_html = drupal_get_form('ding_library_user_loan_list_form', $account, $loans);
-  $vars['loans'] = _ding_borger_api_process_form_markup($loan_html);
+  $vars['loans'] = drupal_get_form('ding_library_user_loan_list_form', $account, $loans);
 
   // Generate reservations form HTML
   $reservations = ding_provider_invoke('reservation', 'list', $account);
-  $res_html=drupal_get_form('ding_reservation_list_form', $account, $reservations);
-  $vars['reservations'] = _ding_borger_api_process_form_markup($res_html);
+  $vars['reservations'] = drupal_get_form('ding_reservation_list_form', $account, $reservations);
 }
 
 /**
- * Remove all markup which should not be displayed in the response to borger.dk.
- *
- * @param string $html the original markup
- * @return string cleaned up markup
+ * Process the response markup before returning it to the 
+ * Enter description here ...
+ * @param unknown_type $markup
  */
-function _ding_borger_api_process_form_markup($html) {
+function ding_borger_api_process_response($markup) {
+  //Remove form tags and elements which shouldn't be sent to Borger.dk
   $remove_patterns = array('/<form[^>]*>/',
                            '/<\/form[^>]*>/',
                            '/<input[^>]*form_build_id[^>]*>/',
                            '/<input[^>]*form_id[^>]*>/');
-  return preg_replace($remove_patterns, '', $html);
+  $markup = preg_replace($remove_patterns, '', $markup);
+  
+  //Inject style sheet content into the response as inline styles using 
+  //the Emogrifier library, http://www.pelagodesign.com/sidecar/emogrifier/.
+  ding_borger_api_load_emogrifier();
+  if (class_exists('Emogrifier')) {
+    //Load the style sheet and convert relative to absolute urls
+    $css = file_get_contents(drupal_get_path('module','ding_borger_api').'/css/ding_borger_api.css');
+    $css = preg_replace('/url\((.*?)\)/i', 'url('.url(drupal_get_path('module', 'ding_borger_api').'/css', array('absolute' => true)).'/$1)', $css);
+    
+    //Let Emogrifier do its work
+    $emogrifier = new Emogrifier();
+    $emogrifier->setHTML($markup);
+    $emogrifier->setCSS($css);
+    $markup = $emogrifier->emogrify();
+  }
+  return $markup;
+}
+
+/**
+ * Load the Emogrifier library from
+ * 
+ * @return FALSE if not unable to load the response
+ */
+function ding_borger_api_load_emogrifier() {
+  return module_load_include('php', 'ding_borger_api', 'lib/emogrifier/emogrifier');
 }
