@@ -251,10 +251,21 @@ function ding_borger_api_process_response($markup) {
 }
 
 /**
- * Load the Emogrifier library from
+ * Load the Emogrifier library
  * 
  * @return FALSE if not unable to load the response
  */
 function ding_borger_api_load_emogrifier() {
-  return module_load_include('php', 'ding_borger_api', 'lib/emogrifier/emogrifier');
+  //For some reason drush_make in the dev and production environment does
+  //not extract the emogrifier.zip file correctly and as a result calls
+  //the file emogrifier instead of emogrifier.php.
+  //This handles both situations
+  $path = drupal_get_path('module', 'ding_borger_api').'/lib/emogrifier/emogrifier';
+  if (file_exists($path)) {
+    require_once $path;
+  } elseif (file_exists($path.'.php')) {
+    require_once $path.'.php';
+  } else {
+    return FALSE;
+  }
 }
