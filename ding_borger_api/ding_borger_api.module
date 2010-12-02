@@ -246,6 +246,10 @@ function ding_borger_api_process_response($markup) {
     $emogrifier->setHTML($markup);
     $emogrifier->setCSS($css);
     $markup = $emogrifier->emogrify();
+    
+    //Remove document tags added by Emogrifier. They shouldn't be sent to Borger.dk.
+    $remove_patterns = array('/<?xml[^>]*>/',);
+    $markup = preg_replace($remove_patterns, '', $markup);       
   }
   return $markup;
 }
