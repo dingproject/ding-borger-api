@@ -24,7 +24,9 @@
 /* Tables */
 .ding-borger-api-data table { clear: both; margin: 15px 0; border: 0 none; }
 .ding-borger-api-data table caption { font-size: 15px; line-height: 18px; text-align: left; color: #454c59; font-weight: bold; }
-.ding-borger-api-data table thead th { background-color: #fff; }
+/* Important as table heads should have a white background according to the HTML guide
+   but the portal style sheet forces a light green background. */
+.ding-borger-api-data table thead th { background-color: #fff !important; }
 .ding-borger-api-data table td, 
 .ding-borger-api-data table th { border: 0 solid #d6e2c2; border-width: 0 0 1px; padding: 10px 10px 10px 0; }
 .ding-borger-api-data table th { color: #454c59; font-weight: bold; vertical-align: bottom; background: #fff; }
