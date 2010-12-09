@@ -16,6 +16,7 @@ function ding_borger_api_admin_settings_form() {
     '#title' => t('Response cache duration'),
     '#description' => t('Determines how long service responses will be cached for.'),
     '#options' => array(
+      0 => t('No cache'),
       60 => t('1 minute'),
       180=> t('3 minutes'),
       300 => t('5 minutes'),

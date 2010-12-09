@@ -49,6 +49,7 @@ function ding_borger_api_service() {
 
   // Return cached response if no form action is called or test module is used
   if ((!$action || ($action == t('Load data'))) &&
+      variable_get('ding_borger_api_response_cache_duration', TRUE) && 
       $cache = cache_get(md5($cpr), 'cache_ding_borger_api_response')) {
     print $cache->data;
     return;
@@ -117,9 +118,10 @@ function ding_borger_api_service() {
     $response = ding_borger_api_process_response($response);
     
     if (sizeof($messages) == 0) {
-      // No messages? Cache output for 5 minutes
-      // TODO: Move configuration of cache duration to administration
-      cache_set(md5($cpr), $response, 'cache_ding_borger_api_response', variable_get('ding_borger_api_response_cache_duration', 300));
+      // No messages? We can cache the output
+      if (variable_get('ding_borger_api_response_cache_duration', 300)) {
+        cache_set(md5($cpr), $response, 'cache_ding_borger_api_response', variable_get('ding_borger_api_response_cache_duration', 300));
+      }
     }
 
     print $response;
