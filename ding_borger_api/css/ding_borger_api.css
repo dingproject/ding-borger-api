@@ -7,15 +7,19 @@
  * Styles defined here are injected into the Borger.dk API response as inline styles as Borger.dk
  * does not import stylesheets. This means that pseudo-classes (hover, after) etc. does not work.
  *
- * @TODO separate admin theme reset from actual styles.
+ * @TODO Improve separation of Drupal theme reset from actual styles.
  */
 
-/* Basic styles */
+/* Reset Drupal theme styles */
 .ding-borger-api-data * { text-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none; text-transform: none; }
+.ding-borger-api-data .form-button { padding-top: 0; }
+
+/* Basic styles */
 .ding-borger-api-data { padding: 15px; color: #333; font-family: Verdana, Arial, sans-serif; font-size: 11px; line-height: 15px; }
 .ding-borger-api-data a { color: #618f11;  text-decoration: underline; }
 .ding-borger-api-data a:hover { color: #ce4e2f; }
 .ding-borger-api-data label { font-size: 11px; line-height: 15px; color: 333; font-weight: bold; color: #454c59; }
+.ding-borger-api-data input { margin: 0; }
 
 /* Tables */
 .ding-borger-api-data table { clear: both; margin: 15px 0; border: 0 none; }
@@ -23,7 +27,7 @@
 .ding-borger-api-data table thead th { background-color: #fff; }
 .ding-borger-api-data table td, 
 .ding-borger-api-data table th { border: 0 solid #d6e2c2; border-width: 0 0 1px; padding: 10px 10px 10px 0; }
-.ding-borger-api-data table th { color: #454c59; font-weight: bold; }
+.ding-borger-api-data table th { color: #454c59; font-weight: bold; vertical-align: bottom; }
 .ding-borger-api-data table .odd { background-color: #eef3e7; }
 
 /* Forms */
@@ -33,10 +37,14 @@
 .ding-borger-api-data .form-textarea, 
 .ding-borger-api-data .form-select { border: 1px solid #cdddb2; } 
 .ding-borger-api-data .form-text { padding: 3px;}
+.ding-borger-api-data .form-select option { padding: 2px 3px; } 
+
+/* Error handling */
 .ding-borger-api-data .form-item-error label { color: #CE4E2F; }
 .ding-borger-api-data .form-item input.error, 
 .ding-borger-api-data .form-item textarea.error, 
 .ding-borger-api-data .form-item select.error { border: 1px solid #CE4E2F; } 
+
 .ding-borger-api-data .container-inline-date .form-item input, 
 .ding-borger-api-data .container-inline-date .form-item select, 
 .ding-borger-api-data .container-inline-date .form-item option { margin-right: 0; }
@@ -73,9 +81,10 @@
 
 /* Reservation buttons */
 .ding-borger-api-data .update-controls { margin-bottom: 15px; }
-.ding-borger-api-data .update-controls .form-item { float: left; margin-left: 10px; }
-.ding-borger-api-data .update-controls .form-item .form-item { float: none; margin-left: 0; }
-.ding-borger-api-data .update-controls .container-inline-date { margin-left: 0; }
+.ding-borger-api-data .update-controls label { display: block; }
+.ding-borger-api-data .update-controls .form-item { float: left; margin-left: 10px; margin-bottom: 15px; }
+.ding-borger-api-data .update-controls .form-item .form-item { float: none; margin-left: 0; margin-bottom: 0; }
+.ding-borger-api-data .update-controls .container-inline-date { margin-left: 0; margin-bottom: 0; }
 .ding-borger-api-data .container-inline-date #edit-options-expiry-datepicker-popup-1 { width: 195px; }
 
 /* Markupless clearing */
