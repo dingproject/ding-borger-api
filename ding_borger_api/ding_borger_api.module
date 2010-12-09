@@ -56,9 +56,45 @@ function ding_borger_api_service() {
 
   // Authenticate the user based on CPR number provided by the caller and a central password
   $password = variable_get('ding_borger_api_library_user_password', '');
-  $res = ding_library_user_authenticate_user($cpr, $password);
+  $auth_res = ding_provider_invoke('user', 'authenticate', $cpr, $password);
+  
+  if ($auth_res['result']) {
+    // The user authenticated so do a proper Drupal external user login
+    // TODO: Code is copy/pasted from ding_library_user_user_login_validate()
+    // This should be refactored.
+    if (isset($auth_res['authname']) && !empty($auth_res['authname'])) {
+      // If provider supplied an authname, use it.
+      $auth_name = $auth_res['authname'];
+    }
+    else {
+      // Else use a standard authname.
+      $auth_name = ding_library_user_default_authname($cpr);
+    }
+    // This sets the proper global $user.
+    user_external_login_register($auth_name, 'ding_library_user');
 
-  if ($res) {
+    // Let authenticate module provide some properties for the $user
+    // object. Thus they can set properties that gets used in
+    // hook_user('login').
+    if (isset($auth_res['user'])) {
+      foreach ($auth_res['user'] as $key => $value) {
+        $user->$key = $value;
+      }
+    }
+
+    // Finalize login.
+    user_authenticate_finalize($form_state['values']);
+
+    // user_authenticate_finalize above just regenerated the session, so we've
+    // waited until now to stuff things in it.
+    if (isset($auth_res['creds'])) {
+      $_SESSION['ding_library_user_creds'][$user->uid] = $auth_res['creds'];
+    }
+    if (ding_provider_supports('user', 'authenticate finalize')) {
+      ding_provider_invoke('user', 'authenticate finalize', $user);
+    }
+    // End of copy/paste
+    
     switch($action) {
       //FIXME: Hardcoding button values does not support changes later on. Can we use values from form alter instead?
       case t('Renew all'):
