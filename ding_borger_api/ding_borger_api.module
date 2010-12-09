@@ -15,8 +15,8 @@ function ding_borger_api_menu() {
     'access callback' => 'ding_borger_api_service_access',
     'type' => MENU_CALLBACK,
   );
-  $items['admin/settings/ding_borger_api'] = array(
-    'title' => 'Ding! Borger.dk API',
+  $items['admin/settings/ding/borger_api'] = array(
+    'title' => 'Borger.dk API',
     'description' => 'Administer the Borger.dk API',
     'access arguments' => array('administer site configuration'),
     'page callback' => 'drupal_get_form',
@@ -24,7 +24,7 @@ function ding_borger_api_menu() {
     'file' => 'ding_borger_api.admin.inc',
     'access arguments' => array('administer site configuration'),
   );
-  $items['admin/settings/ding_borger_api/settings'] = array(
+  $items['admin/settings/ding/borger_api/settings'] = array(
     'title' => 'Settings',
     'description' => 'Administer settings for the Borger.dk API',
     'type' => MENU_DEFAULT_LOCAL_TASK,

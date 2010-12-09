@@ -8,7 +8,7 @@
 function ding_borger_api_test_menu() {
   $items = array();
 
-  $items['admin/settings/ding_borger_api/test'] = array(
+  $items['admin/settings/ding/borger_api/test'] = array(
       'title' => 'Test',
       'description' => 'Test the Ding! Borger.dk API service',
       'page callback' => 'drupal_get_form',
