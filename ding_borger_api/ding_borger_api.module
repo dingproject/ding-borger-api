@@ -271,6 +271,9 @@ function ding_borger_api_process_response($markup) {
                            '/<input[^>]*form_id[^>]*>/');
   $markup = preg_replace($remove_patterns, '', $markup);
   
+  //Make all links open in a new window
+  $markup = preg_replace('/<a(.*?)>/', '<a$1 target="_blank">', $markup);
+  
   //Inject style sheet content into the response as inline styles using 
   //the Emogrifier library, http://www.pelagodesign.com/sidecar/emogrifier/.
   ding_borger_api_load_emogrifier();
