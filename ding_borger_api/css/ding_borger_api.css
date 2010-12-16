@@ -20,6 +20,8 @@
 .ding-borger-api-data a:hover { color: #ce4e2f; }
 .ding-borger-api-data label { font-size: 11px; line-height: 15px; color: 333; font-weight: bold; color: #454c59; }
 .ding-borger-api-data input { margin: 0; }
+.ding-borger-api-data h2 { font-size: 15px; line-height: 18px; text-align: left; color: #454c59; font-weight: bold; }
+
 
 /* Tables */
 .ding-borger-api-data table { clear: both; margin: 15px 0; border: 0 none; }

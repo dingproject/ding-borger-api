@@ -6,6 +6,7 @@
 	  </div>
   <?php endif; ?>
   <div class="ding-loans">
+    <h2><?php print t('Your loans') ?></h2>
     <?php print $loans ?>
   </div>
   <div class="ding-reservations">
