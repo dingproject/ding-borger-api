@@ -93,6 +93,7 @@
 .ding-borger-api-data td.create_date,
 .ding-borger-api-data td.valid_to { white-space: nowrap; }
 .ding-borger-api-data td.checkbox { text-align: center; }
+.ding-borger-api-data .ding-loans caption { font-size: 11px; line-height: 15px; text-align: left; color: #454c59; font-weight: bold; }
 
 /* Loan buttons */
 .ding-borger-api-data .edit-renew-top,
