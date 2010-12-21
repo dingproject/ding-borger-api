@@ -10,10 +10,15 @@
  * @TODO Improve separation of Drupal theme reset from actual styles.
  */
 
-/* Reset Drupal theme styles */
+/**
+ * Reset Drupal theme styles 
+ * @TODO Consider moving these to a separate stylesheet which is only loaded when testing the service. 
+ */
+
 .ding-borger-api-data { background-color: #fff; }
 .ding-borger-api-data * { text-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none; text-transform: none; }
 .ding-borger-api-data .form-button { padding-top: 0; }
+.ding-borger-api-data .messages { -moz-border-radius: 0; }
 
 /* Basic styles */
 .ding-borger-api-data { padding: 15px; color: #333; font-family: Verdana, Arial, sans-serif; font-size: 11px; line-height: 15px; }
@@ -92,8 +97,11 @@
 .ding-borger-api-data td.due_date,
 .ding-borger-api-data td.create_date,
 .ding-borger-api-data td.valid_to { white-space: nowrap; }
-.ding-borger-api-data td.checkbox { text-align: center; }
+.ding-borger-api-data td.checkbox { padding: auto; text-align: center; }
+
 .ding-borger-api-data .ding-loans caption { font-size: 11px; line-height: 15px; text-align: left; color: #454c59; font-weight: bold; }
+
+.ding-borger-api-data .reservation-number { white-space: nowrap; }
 
 /* Loan buttons */
 .ding-borger-api-data .edit-renew-top,
