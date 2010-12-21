@@ -62,13 +62,13 @@
 .ding-borger-api-data .form-button:hover input { background-position: top right; }
 
 /* Messages */
-.ding-borger-api-data .messages,
-.ding-borger-api-data .ding-debts { margin: 5px 0; padding: 10px 15px; background-color: #5a850d; color: #fff; border: 1px solid #7fa533; -moz-border-radius: 0; }
-.ding-borger-api-data .messages a,
-.ding-borger-api-data .ding-debts a { color: #fff; }
-.ding-borger-api-data .messages a:hover,
-.ding-borger-api-data .ding-debts a:hover { color: #99ba34; }
+.ding-borger-api-data .messages { margin: 5px 0; padding: 10px 15px; background-color: #5a850d; color: #fff; border: 1px solid #7fa533; -moz-border-radius: 0; }
+.ding-borger-api-data .messages a { color: #fff; }
+.ding-borger-api-data .messages a:hover { color: #99ba34; }
 .ding-borger-api-data .messages.error { background-color: #EF917B; border-color: #CE4E2F; }
+
+/* Debts */
+.ding-borger-api-data .ding-debts {  margin: 5px 0; padding: 10px 15px; background-color: #EEF3E7; border: 1px solid #d6e2c2; }
 
 /* Loans and reservations */
 .ding-borger-api-data .ding-loans,
