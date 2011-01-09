@@ -38,6 +38,7 @@
 .ding-borger-api-data table td, 
 .ding-borger-api-data table th { border: 0 solid #d6e2c2; border-width: 0 0 1px; padding: 10px 10px 10px 0; }
 .ding-borger-api-data table th { color: #454c59; font-weight: bold; vertical-align: bottom; background: #fff; }
+.ding-borger-api-data table td.checkbox { vertical-align: middle; }
 .ding-borger-api-data table .odd { background-color: #eef3e7; }
 
 /* Forms */
@@ -74,6 +75,9 @@
 
 /* Debts */
 .ding-borger-api-data .ding-debts {  margin: 5px 0; padding: 10px 15px; background-color: #EEF3E7; border: 1px solid #d6e2c2; }
+.ding-borger-api-data .ding-debts a { color: #618f11; }
+.ding-borger-api-data .ding-debts a:hover { color: #ce4e2f; }
+
 
 /* Loans and reservations */
 .ding-borger-api-data .ding-loans,
